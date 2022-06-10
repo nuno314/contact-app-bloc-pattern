@@ -21,7 +21,11 @@ class _ContactListScreenState extends State<ContactListScreen> {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => CreateContactScreen()));
         },
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          size: 100,
+          color: Colors.pink,
+        ),
       ),
       body: Column(
         children: [
