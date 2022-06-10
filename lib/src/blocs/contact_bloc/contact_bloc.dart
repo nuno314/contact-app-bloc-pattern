@@ -17,16 +17,13 @@ class ContactBloc {
   Stream<String> get phoneNumberStream => _phoneNumberController.stream;
 
   bool isValidContact(String name, String phoneNumber) {
-    print('ok');
-    print(name);
-    print(phoneNumber);
     if (name.isEmpty) {
       _nameController.addError('Please enter Name');
       return false;
     }
     _nameController.add('Valid name');
 
-    if (phoneNumber.isEmpty || phoneNumber == null) {
+    if (phoneNumber.isEmpty) {
       _phoneNumberController.addError('Please enter Phone number');
       return false;
     }

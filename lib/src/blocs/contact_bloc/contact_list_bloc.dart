@@ -21,10 +21,6 @@ class ContactListBloc {
   }
 
   updateContact(Contact contact, Contact newContact) {
-    print(contact.name);
-    list.forEach((element) {
-      print(element.name);
-    });
     int i = list.indexOf(contact);
     if (i == -1) {
       return;

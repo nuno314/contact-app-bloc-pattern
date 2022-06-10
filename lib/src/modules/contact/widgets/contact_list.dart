@@ -34,7 +34,7 @@ class ContactList extends StatelessWidget {
                               radius: 24,
                               backgroundColor: Colors.pink,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 20,
                             ),
                             Column(
@@ -48,7 +48,7 @@ class ContactList extends StatelessWidget {
                                     fontSize: 24,
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 2,
                                 ),
                                 Text(
