@@ -1,5 +1,6 @@
 import 'package:contact_listing_bloc/src/blocs/contact_bloc/contact_list_bloc.dart';
 import 'package:contact_listing_bloc/src/models/contacts.dart';
+import 'package:contact_listing_bloc/src/modules/contact/detail_contact_page.dart';
 import 'package:flutter/material.dart';
 
 class ContactList extends StatelessWidget {
@@ -18,25 +19,45 @@ class ContactList extends StatelessWidget {
             children: snapshot.data!
                 .map((e) => Padding(
                       padding: const EdgeInsets.all(16),
-                      child: Row(
-                        children: [
-                          const CircleAvatar(),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                e.name,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetailContactPage(
+                                        contact: e,
+                                      )));
+                        },
+                        child: Row(
+                          children: [
+                            const CircleAvatar(
+                              radius: 24,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  e.name,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24,
+                                  ),
                                 ),
-                              ),
-                              Text(e.phoneNumber),
-                            ],
-                          ),
-                        ],
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                Text(
+                                  e.phoneNumber,
+                                  style: TextStyle(fontSize: 22),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ))
                 .toList(),

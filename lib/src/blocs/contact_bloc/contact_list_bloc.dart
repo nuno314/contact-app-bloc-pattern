@@ -11,6 +11,12 @@ class ContactListBloc {
 
   addContact(Contact contact) {
     list.add(contact);
+    list.sort(((a, b) => a.name.compareTo(b.name)));
+    _listController.sink.add(list);
+  }
+
+  removeContact(Contact contact) {
+    list.remove(contact);
     _listController.sink.add(list);
   }
 }

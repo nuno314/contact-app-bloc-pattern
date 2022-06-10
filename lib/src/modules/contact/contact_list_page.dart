@@ -1,4 +1,5 @@
 import 'package:contact_listing_bloc/src/modules/contact/add_contact_page.dart';
+import 'package:contact_listing_bloc/src/modules/contact/widgets/contact_list.dart';
 import 'package:flutter/material.dart';
 
 class ContactListScreen extends StatefulWidget {
@@ -24,7 +25,7 @@ class _ContactListScreenState extends State<ContactListScreen> {
       ),
       body: Column(
         children: [
-          // ContactList(),
+          ContactList(),
         ],
       ),
     );
