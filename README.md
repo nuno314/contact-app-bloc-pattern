@@ -2,6 +2,5 @@
 
 A new Flutter project.
 
-## Getting Started
 
-![6j7gx7](https://user-images.githubusercontent.com/64879684/173015280-ce8a730c-1c20-478d-9b24-b6eb87be1eeb.gif)
+![ezgif-3-8c10825480](https://user-images.githubusercontent.com/64879684/173015635-ee07c9b5-50fc-4c2d-8bea-80a2f5ecc634.gif)
