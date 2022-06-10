@@ -17,13 +17,16 @@ class ContactBloc {
   Stream<String> get phoneNumberStream => _phoneNumberController.stream;
 
   bool isValidContact(String name, String phoneNumber) {
+    print('ok');
+    print(name);
+    print(phoneNumber);
     if (name.isEmpty) {
       _nameController.addError('Please enter Name');
       return false;
     }
     _nameController.add('Valid name');
 
-    if (phoneNumber.isEmpty) {
+    if (phoneNumber.isEmpty || phoneNumber == null) {
       _phoneNumberController.addError('Please enter Phone number');
       return false;
     }
@@ -42,11 +45,13 @@ class ContactBloc {
       return;
     }
     Contact newContact = Contact(name: name, phoneNumber: phoneNumber);
-    _contactController.sink.add(newContact);
+    // _contactController.sink.add(newContact);
     contactListBloc.addContact(newContact);
   }
 
   void dispose() {
     _contactController.close();
+    _nameController.close();
+    _phoneNumberController.close();
   }
 }

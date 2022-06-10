@@ -71,8 +71,11 @@ class CreateContact extends StatelessWidget {
                   child: const Center(
                     child: Text(
                       'Submit',
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   )),
             )),

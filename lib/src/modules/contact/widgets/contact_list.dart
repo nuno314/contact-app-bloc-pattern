@@ -32,6 +32,7 @@ class ContactList extends StatelessWidget {
                           children: [
                             const CircleAvatar(
                               radius: 24,
+                              backgroundColor: Colors.pink,
                             ),
                             SizedBox(
                               width: 20,

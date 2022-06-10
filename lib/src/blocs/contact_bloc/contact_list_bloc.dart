@@ -19,6 +19,19 @@ class ContactListBloc {
     list.remove(contact);
     _listController.sink.add(list);
   }
+
+  updateContact(Contact contact, Contact newContact) {
+    print(contact.name);
+    list.forEach((element) {
+      print(element.name);
+    });
+    int i = list.indexOf(contact);
+    if (i == -1) {
+      return;
+    }
+    list[i] = newContact;
+    _listController.sink.add(list);
+  }
 }
 
 final contactListBloc = ContactListBloc();
