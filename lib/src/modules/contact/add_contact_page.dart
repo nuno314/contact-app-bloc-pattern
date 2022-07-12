@@ -17,17 +17,23 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
 
+  ContactsBloc get bloc => BlocProvider.of(context);
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
+    Contact? contact;
 
     if (widget.contact != null) {
       _nameController.text = widget.contact!.name;
       _phoneNumberController.text = widget.contact!.phoneNumber;
     }
+
     return Scaffold(
       appBar: AppBar(title: const Text('Add Contact')),
       body: BlocListener<ContactsBloc, ContactsState>(
+        bloc: bloc,
         listener: (context, state) {
           if (state is ContactsLoaded) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -35,7 +41,7 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
                 content: Text('Contact Added'),
               ),
             );
-            Navigator.pop(context);
+            Navigator.of(context).pop(contact);
           }
         },
         child: Column(
@@ -62,24 +68,26 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
                 padding: const EdgeInsets.all(16),
                 child: GestureDetector(
                   onTap: () {
-                    var contact = Contact(
+                    contact = Contact(
                       name: _nameController.text,
                       phoneNumber: _phoneNumberController.text,
-                      id: widget.contact!.id,
+                      id: widget.contact?.id,
                     );
+
+                    if (contact == null) {
+                      return;
+                    }
 
                     //Update
                     if (widget.contact != null) {
-                      context
-                          .read<ContactsBloc>()
-                          .add(UpdateContact(contact: contact));
+                      bloc.add(UpdateContact(contact: contact!));
                     }
 
                     //Add
                     else {
                       context
                           .read<ContactsBloc>()
-                          .add(AddContact(contact: contact));
+                          .add(AddContact(contact: contact!));
                     }
                   },
                   child: Container(

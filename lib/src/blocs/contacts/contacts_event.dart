@@ -1,14 +1,11 @@
 part of 'contacts_bloc.dart';
 
-@immutable
 abstract class ContactsEvent {}
 
 class LoadContacts extends ContactsEvent {
   final List<Contact> contacts;
 
-  LoadContacts({this.contacts = const <Contact>[]});
-
-  List<Contact> get _contacts => contacts;
+  LoadContacts({required this.contacts});
 }
 
 class AddContact extends ContactsEvent {

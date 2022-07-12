@@ -1,12 +1,12 @@
 import 'package:contact_listing_bloc/src/blocs/contacts/contacts_bloc.dart';
-import 'package:contact_listing_bloc/src/models/contacts.dart';
 import 'package:contact_listing_bloc/src/modules/contact/add_contact_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DetailContactPage extends StatefulWidget {
-  Contact contact;
-  DetailContactPage({Key? key, required this.contact}) : super(key: key);
+  final int contactIndex;
+  const DetailContactPage({Key? key, required this.contactIndex})
+      : super(key: key);
   @override
   State<DetailContactPage> createState() => _DetailContactPageState();
 }
@@ -16,21 +16,22 @@ class _DetailContactPageState extends State<DetailContactPage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: AppBar(title: const Text('Detail')),
-        body: BlocListener<ContactsBloc, ContactsState>(
-          listener: (context, state) {
-            if (state is ContactDeleted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Deleted'),
-                ),
-              );
-              Navigator.pop(context);
-            } else if (state is ContactUpdated) {
-              setState(() {});
-            }
-          },
-          child: Column(children: [
+      appBar: AppBar(title: const Text('Detail')),
+      body: BlocConsumer<ContactsBloc, ContactsState>(
+        listener: (context, state) {
+          if (state is ContactDeleted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Deleted'),
+              ),
+            );
+            Navigator.pop(context);
+          } else if (state is ContactUpdated) {
+            setState(() {});
+          }
+        },
+        builder: (context, state) => Column(
+          children: [
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(32),
@@ -44,7 +45,7 @@ class _DetailContactPageState extends State<DetailContactPage> {
               child: Padding(
                 padding: const EdgeInsets.all(32),
                 child: Text(
-                  widget.contact.name,
+                  state.contacts.elementAt(widget.contactIndex).name,
                   style: const TextStyle(
                       fontSize: 32, fontWeight: FontWeight.bold),
                 ),
@@ -54,7 +55,7 @@ class _DetailContactPageState extends State<DetailContactPage> {
               child: Padding(
                 padding: const EdgeInsets.all(32),
                 child: Text(
-                  widget.contact.phoneNumber,
+                  state.contacts.elementAt(widget.contactIndex).phoneNumber,
                   style: const TextStyle(
                       fontSize: 32, fontWeight: FontWeight.bold),
                 ),
@@ -66,11 +67,14 @@ class _DetailContactPageState extends State<DetailContactPage> {
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CreateContactScreen(
-                                  contact: widget.contact,
-                                )));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CreateContactScreen(
+                          contact:
+                              state.contacts.elementAt(widget.contactIndex),
+                        ),
+                      ),
+                    );
                   },
                   child: Container(
                       width: size.width / 2.5,
@@ -87,9 +91,9 @@ class _DetailContactPageState extends State<DetailContactPage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    context
-                        .read<ContactsBloc>()
-                        .add(DeleteContact(contact: widget.contact));
+                    context.read<ContactsBloc>().add(DeleteContact(
+                        contact:
+                            state.contacts.elementAt(widget.contactIndex)));
                   },
                   child: Container(
                       width: size.width / 2.5,
@@ -105,8 +109,10 @@ class _DetailContactPageState extends State<DetailContactPage> {
                       ))),
                 ),
               ],
-            )
-          ]),
-        ));
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

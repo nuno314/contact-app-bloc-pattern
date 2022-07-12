@@ -1,18 +1,24 @@
 part of 'contacts_bloc.dart';
 
-@immutable
-abstract class ContactsState {}
-
-class ContactsLoading extends ContactsState {}
-
-class ContactsLoaded extends ContactsState {
+abstract class ContactsState {
   final List<Contact> contacts;
+  
 
-  ContactsLoaded({this.contacts = const <Contact>[]});
-
-  List<Object> get props => [contacts];
+  const ContactsState(this.contacts);
 }
 
-class ContactDeleted extends ContactsState {}
+class ContactsLoading extends ContactsState {
+  const ContactsLoading(super.contacts);
+}
 
-class ContactUpdated extends ContactsState {}
+class ContactsLoaded extends ContactsState {
+  const ContactsLoaded(super.contacts);
+}
+
+class ContactDeleted extends ContactsState {
+  const ContactDeleted(super.contacts);
+}
+
+class ContactUpdated extends ContactsState {
+  const ContactUpdated(super.contacts);
+}

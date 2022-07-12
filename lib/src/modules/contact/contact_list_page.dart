@@ -4,15 +4,37 @@ import 'package:contact_listing_bloc/src/modules/contact/detail_contact_page.dar
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ContactListScreen extends StatelessWidget {
+import '../../models/contacts.dart';
+
+class ContactListScreen extends StatefulWidget {
+  const ContactListScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ContactListScreen> createState() => _ContactListScreenState();
+}
+
+class _ContactListScreenState extends State<ContactListScreen> {
+  ContactsBloc get bloc => BlocProvider.of(context);
+
+  @override
+  void initState() {
+    bloc.add(
+      LoadContacts(contacts: users),
+    );
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text('Contact List')),
         floatingActionButton: GestureDetector(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => CreateContactScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const CreateContactScreen()));
           },
           child: const Icon(
             Icons.add,
@@ -33,57 +55,87 @@ class ContactListScreen extends StatelessWidget {
             } else if (state is ContactsLoaded) {
               print('ContactsLoaded');
 
-              return ListView(
-                children: state.contacts
-                    .map((e) => Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => DetailContactPage(
-                                            contact: e,
-                                          )));
-                            },
-                            child: Row(
-                              children: [
-                                const CircleAvatar(
-                                  radius: 24,
-                                  backgroundColor: Colors.pink,
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      e.name,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 24,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 2,
-                                    ),
-                                    Text(
-                                      e.phoneNumber,
-                                      style: TextStyle(fontSize: 22),
-                                    ),
-                                  ],
-                                ),
-                              ],
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        const Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Please enter name',
+                              labelText: 'Search contact',
                             ),
                           ),
-                        ))
-                    .toList(),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView(
+                      children: state.contacts
+                          .map((contact) => Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DetailContactPage(
+                                          contactIndex:
+                                              state.contacts.indexOf(contact),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Row(
+                                    children: [
+                                      const CircleAvatar(
+                                        radius: 24,
+                                        backgroundColor: Colors.pink,
+                                      ),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            contact.name,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 24,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 2,
+                                          ),
+                                          Text(
+                                            contact.phoneNumber,
+                                            style:
+                                                const TextStyle(fontSize: 22),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                ],
               );
             } else {
-              return Text('Error');
+              return const Text('Error');
             }
           },
         ));
