@@ -1,12 +1,9 @@
 part of 'contacts_bloc.dart';
 
 @immutable
-abstract class ContactsState {
+abstract class ContactsState {}
 
-}
-
-class ContactsLoading extends ContactsState {
-}
+class ContactsLoading extends ContactsState {}
 
 class ContactsLoaded extends ContactsState {
   final List<Contact> contacts;
@@ -15,3 +12,7 @@ class ContactsLoaded extends ContactsState {
 
   List<Object> get props => [contacts];
 }
+
+class ContactDeleted extends ContactsState {}
+
+class ContactUpdated extends ContactsState {}

@@ -1,5 +1,6 @@
 import 'package:contact_listing_bloc/src/blocs/contacts/contacts_bloc.dart';
 import 'package:contact_listing_bloc/src/models/contacts.dart';
+import 'package:contact_listing_bloc/src/modules/contact/add_contact_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,9 +12,6 @@ class DetailContactPage extends StatefulWidget {
 }
 
 class _DetailContactPageState extends State<DetailContactPage> {
-  final _updateNameController = TextEditingController();
-  final _updatePhoneNumberController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -21,12 +19,16 @@ class _DetailContactPageState extends State<DetailContactPage> {
         appBar: AppBar(title: const Text('Detail')),
         body: BlocListener<ContactsBloc, ContactsState>(
           listener: (context, state) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Deleted'),
-              ),
-            );
-            Navigator.pop(context);
+            if (state is ContactDeleted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Deleted'),
+                ),
+              );
+              Navigator.pop(context);
+            } else if (state is ContactUpdated) {
+              setState(() {});
+            }
           },
           child: Column(children: [
             Center(
@@ -62,6 +64,14 @@ class _DetailContactPageState extends State<DetailContactPage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CreateContactScreen(
+                                  contact: widget.contact,
+                                )));
+                  },
                   child: Container(
                       width: size.width / 2.5,
                       height: size.height / 15,

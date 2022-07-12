@@ -20,10 +20,15 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
 
   void _onAddContact(AddContact event, Emitter<ContactsState> emit) {
     final state = this.state;
+
     if (state is ContactsLoaded) {
       if (_validContact(event.contact)) {
-        emit(ContactsLoaded(
-            contacts: List.from(state.contacts)..add(event.contact)));
+        Contact contact = event.contact.copyWith(id: state.contacts.length);
+        emit(
+          ContactsLoaded(
+            contacts: List.from(state.contacts)..add(contact),
+          ),
+        );
       }
     }
   }
@@ -32,12 +37,9 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     final state = this.state;
     if (state is ContactsLoaded) {
       List<Contact> contacts = state.contacts.map((contact) {
-        return contact.phoneNumber == event.contact.phoneNumber
-            ? event.contact
-            : contact.name == event.contact.name
-                ? event.contact
-                : contact;
+        return contact.id == event.contact.id ? event.contact : contact;
       }).toList();
+      emit(ContactUpdated());
       emit(ContactsLoaded(contacts: contacts));
     }
   }
@@ -48,6 +50,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
       List<Contact> contacts = state.contacts.where((contact) {
         return contact.phoneNumber != event.contact.phoneNumber;
       }).toList();
+      emit(ContactDeleted());
       emit(ContactsLoaded(contacts: contacts));
     }
   }
