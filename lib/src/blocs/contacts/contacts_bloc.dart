@@ -7,7 +7,7 @@ part 'contacts_event.dart';
 part 'contacts_state.dart';
 
 class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
-  ContactsBloc() : super(ContactsLoading()) {
+  ContactsBloc() : super(ContactsLoading(users)) {
     on<LoadContacts>(_onLoadContacts);
     on<AddContact>(_onAddContact);
     on<UpdateContact>(_onUpdateContact);
@@ -15,7 +15,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   }
 
   void _onLoadContacts(LoadContacts event, Emitter<ContactsState> emit) {
-    emit(ContactsLoaded(contacts: event.contacts));
+    emit(ContactsLoaded(event.contacts));
   }
 
   void _onAddContact(AddContact event, Emitter<ContactsState> emit) {
@@ -25,9 +25,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
       if (_validContact(event.contact)) {
         Contact contact = event.contact.copyWith(id: state.contacts.length);
         emit(
-          ContactsLoaded(
-            contacts: List.from(state.contacts)..add(contact),
-          ),
+          ContactsLoaded(List.from(state.contacts)..add(contact)),
         );
       }
     }
@@ -39,8 +37,8 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
       List<Contact> contacts = state.contacts.map((contact) {
         return contact.id == event.contact.id ? event.contact : contact;
       }).toList();
-      emit(ContactUpdated());
-      emit(ContactsLoaded(contacts: contacts));
+      emit(ContactUpdated(contacts));
+      emit(ContactsLoaded(contacts));
     }
   }
 
@@ -50,8 +48,8 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
       List<Contact> contacts = state.contacts.where((contact) {
         return contact.phoneNumber != event.contact.phoneNumber;
       }).toList();
-      emit(ContactDeleted());
-      emit(ContactsLoaded(contacts: contacts));
+      emit(ContactDeleted(contacts));
+      emit(ContactsLoaded(contacts));
     }
   }
 

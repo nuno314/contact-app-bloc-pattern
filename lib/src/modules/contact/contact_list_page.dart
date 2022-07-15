@@ -1,18 +1,37 @@
 import 'package:contact_listing_bloc/src/blocs/contacts/contacts_bloc.dart';
+import 'package:contact_listing_bloc/src/models/contacts.dart';
 import 'package:contact_listing_bloc/src/modules/contact/add_contact_page.dart';
 import 'package:contact_listing_bloc/src/modules/contact/detail_contact_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ContactListScreen extends StatelessWidget {
+class ContactListScreen extends StatefulWidget {
+  const ContactListScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ContactListScreen> createState() => _ContactListScreenState();
+}
+
+class _ContactListScreenState extends State<ContactListScreen> {
+  ContactsBloc get bloc => BlocProvider.of(context);
+  @override
+  void initState() {
+    bloc.add(LoadContacts(contacts: users));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text('Contact List')),
-        floatingActionButton: GestureDetector(
+        floatingActionButton: InkWell(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => CreateContactScreen()));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CreateContactScreen(),
+              ),
+            );
           },
           child: const Icon(
             Icons.add,
@@ -21,9 +40,11 @@ class ContactListScreen extends StatelessWidget {
           ),
         ),
         body: BlocBuilder<ContactsBloc, ContactsState>(
+          bloc: bloc,
           builder: (context, state) {
+            List<Contact> contacts = state.contacts;
+
             if (state is ContactsLoading) {
-              print('ContactsLoading');
               return const Center(
                 child: CircularProgressIndicator(
                   color: Colors.pink,
@@ -31,20 +52,20 @@ class ContactListScreen extends StatelessWidget {
                 ),
               );
             } else if (state is ContactsLoaded) {
-              print('ContactsLoaded');
-
               return ListView(
-                children: state.contacts
-                    .map((e) => Padding(
+                children: contacts
+                    .map((contact) => Padding(
                           padding: const EdgeInsets.all(16),
-                          child: GestureDetector(
+                          child: InkWell(
                             onTap: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => DetailContactPage(
-                                            contact: e,
-                                          )));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailContactPage(
+                                    contactIndex: contacts.indexOf(contact),
+                                  ),
+                                ),
+                              );
                             },
                             child: Row(
                               children: [
@@ -61,7 +82,7 @@ class ContactListScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      e.name,
+                                      contact.name,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 24,
@@ -71,8 +92,8 @@ class ContactListScreen extends StatelessWidget {
                                       height: 2,
                                     ),
                                     Text(
-                                      e.phoneNumber,
-                                      style: TextStyle(fontSize: 22),
+                                      contact.phoneNumber,
+                                      style: const TextStyle(fontSize: 22),
                                     ),
                                   ],
                                 ),
@@ -83,7 +104,7 @@ class ContactListScreen extends StatelessWidget {
                     .toList(),
               );
             } else {
-              return Text('Error');
+              return const Text('Error');
             }
           },
         ));

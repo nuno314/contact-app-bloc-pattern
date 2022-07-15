@@ -17,10 +17,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-            create: (context) => ContactsBloc()
-              ..add(
-                LoadContacts(contacts: users),
-              )),
+          create: (context) => ContactsBloc(),
+        )
       ],
       child: MaterialApp(
         theme: ThemeData(
